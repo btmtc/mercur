@@ -16,6 +16,7 @@ module.exports = defineConfig({
     }
   },
   modules: [
+    { resolve: '@mercurjs/shop' },
     { resolve: '@mercurjs/seller' },
     { resolve: '@mercurjs/reviews' },
     { resolve: '@mercurjs/marketplace' },

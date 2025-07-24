@@ -13,7 +13,7 @@
     "medusa"
   ],
   "scripts": {
-    "build": "medusa build && ln -s .medusa/server/public/ public",
+    "build": "medusa build && cmd /c mklink /D public .medusa/server/public",
     "seed": "medusa exec ./src/scripts/seed.ts",
     "start": "medusa start --types=false",
     "dev": "medusa develop --types=false",
@@ -35,6 +35,7 @@
     "@mercurjs/configuration": "*",
     "@mercurjs/marketplace": "*",
     "@mercurjs/seller": "*",
+    "@mercurjs/shop": "*",
     "@mercurjs/reviews": "*",
     "@mercurjs/payout": "*",
     "@mercurjs/brand": "*",
