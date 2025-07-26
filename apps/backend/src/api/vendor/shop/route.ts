@@ -13,14 +13,6 @@ export const POST = async (
   req: AuthenticatedMedusaRequest<VendorCreateShopType>,
   res: MedusaResponse
 ) => {
-  //   if (req.auth_context?.actor_id) {
-  //     throw new MedusaError(
-  //       MedusaError.Types.INVALID_DATA,
-  //       'Request already authenticated as a seller.'
-  //     )
-  //   }
-  //const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
-
   console.log('VAL:', req.validatedBody)
   console.log('BODY:', req.body)
   const { name } = req.validatedBody
