@@ -10,10 +10,10 @@ import {
   createPublishableKey,
   createRegions,
   createSalesChannel,
-  createSeller,
   createSellerProducts,
   createSellerShippingOption,
   createSellerStockLocation,
+  createSellers,
   createServiceZoneForFulfillmentSet,
   createStore
 } from './seed/seed-functions'
@@ -39,29 +39,40 @@ export default async function seedMarketplaceData({ container }: ExecArgs) {
   logger.info('Creating product collections...')
   await createProductCollections(container)
   logger.info('Creating seller...')
-  const seller = await createSeller(container)
+  const sellers = await createSellers(container, [
+    {
+      email: 'seller@mercurjs.com',
+      password: 'secret',
+      name: 'John Doe'
+    },
+    {
+      email: 'seller01@dummy.com',
+      password: '123',
+      name: 'seller01'
+    }
+  ])
   logger.info('Creating seller stock location...')
   const stockLocation = await createSellerStockLocation(
     container,
-    seller.id,
+    sellers[0].id,
     salesChannel.id
   )
   logger.info('Creating service zone...')
   const serviceZone = await createServiceZoneForFulfillmentSet(
     container,
-    seller.id,
+    sellers[0].id,
     stockLocation.fulfillment_sets[0].id
   )
   logger.info('Creating seller shipping option...')
   await createSellerShippingOption(
     container,
-    seller.id,
-    seller.name,
+    sellers[0].id,
+    sellers[0].name,
     region.id,
     serviceZone.id
   )
   logger.info('Creating seller products...')
-  await createSellerProducts(container, seller.id, salesChannel.id)
+  await createSellerProducts(container, sellers[0].id, salesChannel.id)
   logger.info('Creating inventory levels...')
   await createInventoryItemStockLevels(container, stockLocation.id)
   logger.info('Creating default commission...')

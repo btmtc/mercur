@@ -21,6 +21,7 @@ import {
   ConfigurationModuleService,
   ConfigurationRuleDefaults
 } from '@mercurjs/configuration'
+import { SellerDTO } from '@mercurjs/framework'
 import { SELLER_MODULE } from '@mercurjs/seller'
 
 import sellerShippingProfile from '../../links/seller-shipping-profile'
@@ -210,31 +211,32 @@ export async function createProductCollections(container: MedusaContainer) {
   return result
 }
 
-export async function createSeller(container: MedusaContainer) {
+export async function createSellers(
+  container: MedusaContainer,
+  sellers: { email: string; password: string; name: string }[]
+) {
   const authService = container.resolve(Modules.AUTH)
 
-  const { authIdentity } = await authService.register('emailpass', {
-    body: {
-      email: 'seller@mercurjs.com',
-      password: 'secret'
-    }
-  })
+  const createdSellers: SellerDTO[] = []
 
-  const { result: seller } = await createSellerWorkflow.run({
-    container,
-    input: {
-      auth_identity_id: authIdentity?.id,
-      member: {
-        name: 'John Doe',
-        email: 'seller@mercurjs.com'
-      },
-      seller: {
-        name: 'MercurJS Store'
+  for (const { email, password, name } of sellers) {
+    const { authIdentity } = await authService.register('emailpass', {
+      body: { email, password }
+    })
+
+    const { result: seller } = await createSellerWorkflow.run({
+      container,
+      input: {
+        auth_identity_id: authIdentity?.id,
+        member: { name, email },
+        seller: { name: `${name} Store` }
       }
-    }
-  })
+    })
 
-  return seller
+    createdSellers.push(seller)
+  }
+
+  return createdSellers
 }
 
 export async function createSellerStockLocation(
