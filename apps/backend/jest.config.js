@@ -1,4 +1,4 @@
-const { loadEnv } = require('@medusajs/utils')
+const { loadEnv } = require('@medusajs/framework/utils')
 loadEnv('test', process.cwd())
 
 module.exports = {
@@ -7,14 +7,16 @@ module.exports = {
       '@swc/jest',
       {
         jsc: {
-          parser: { syntax: 'typescript', decorators: true }
+          parser: { syntax: 'typescript', decorators: true },
+          target: 'es2021'
         }
       }
     ]
   },
   testEnvironment: 'node',
   moduleFileExtensions: ['js', 'ts', 'json'],
-  modulePathIgnorePatterns: ['dist/']
+  modulePathIgnorePatterns: ['dist/'],
+  setupFiles: ['./integration-tests/setup.js']
 }
 
 if (process.env.TEST_TYPE === 'integration:http') {
