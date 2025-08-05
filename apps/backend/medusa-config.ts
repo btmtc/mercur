@@ -1,6 +1,6 @@
-import { defineConfig, loadEnv } from '@medusajs/framework/utils'
+import { defineConfig, loadEnv } from '@medusajs/framework/utils';
 
-loadEnv(process.env.NODE_ENV || 'development', process.cwd())
+loadEnv(process.env.NODE_ENV || 'development', process.cwd());
 
 module.exports = defineConfig({
   projectConfig: {
@@ -16,7 +16,6 @@ module.exports = defineConfig({
     }
   },
   modules: [
-    { resolve: '@mercurjs/shop' },
     { resolve: '@mercurjs/seller' },
     { resolve: '@mercurjs/reviews' },
     { resolve: '@mercurjs/marketplace' },
@@ -86,4 +85,4 @@ module.exports = defineConfig({
       }
     }
   ]
-})
+});

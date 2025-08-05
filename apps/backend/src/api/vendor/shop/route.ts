@@ -34,6 +34,8 @@ export const POST = async (
       }
     }
   })
+  // @TODO внести линкование к селлеру внутрь воркфлоу
+  // сходу не удалось
   const link = req.scope.resolve(ContainerRegistrationKeys.LINK)
 
   await link.create({

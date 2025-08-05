@@ -1,12 +1,10 @@
 import { z } from 'zod'
 
 import { AdditionalData } from '@medusajs/framework/types'
-import {
-  WithAdditionalData,
-} from '@medusajs/medusa/api/utils/validators'
+import { AdminGetProductsParams } from '@medusajs/medusa/api/admin/products/validators'
+import { WithAdditionalData } from '@medusajs/medusa/api/utils/validators'
 
 import { IdAssociation } from '../../../shared/infra/http/utils'
-import { AdminGetProductsParams } from '@medusajs/medusa/api/admin/products/validators'
 
 export type VendorGetProductParamsType = z.infer<typeof VendorGetProductParams>
 export const VendorGetProductParams = AdminGetProductsParams
@@ -518,7 +516,8 @@ export const CreateProduct = z
     material: z.string().optional(),
     metadata: z.record(z.unknown()).optional(),
     sales_channels: z.array(z.object({ id: z.string() })).optional(),
-    brand_name: z.string().optional()
+    brand_name: z.string().optional(),
+    shop_id: z.string()
   })
   .strict()
 /**

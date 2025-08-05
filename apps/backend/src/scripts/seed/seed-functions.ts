@@ -23,12 +23,14 @@ import {
 } from '@mercurjs/configuration'
 import { SellerDTO } from '@mercurjs/framework'
 import { SELLER_MODULE } from '@mercurjs/seller'
+import { SHOP_MODULE } from '@mercurjs/shop'
 
 import sellerShippingProfile from '../../links/seller-shipping-profile'
 import { createCommissionRuleWorkflow } from '../../workflows/commission/workflows'
 import { createConfigurationRuleWorkflow } from '../../workflows/configuration/workflows'
 import { createLocationFulfillmentSetAndAssociateWithSellerWorkflow } from '../../workflows/fulfillment-set/workflows'
 import { createSellerWorkflow } from '../../workflows/seller/workflows'
+import { createShopWorkflow } from '../../workflows/shop/workflows/create-shop'
 import { productsToInsert } from './seed-products'
 
 const countries = ['be', 'de', 'dk', 'se', 'fr', 'es', 'it', 'pl', 'cz', 'nl']
@@ -527,4 +529,29 @@ export async function createConfigurationRules(container: MedusaContainer) {
       })
     }
   }
+}
+export async function createShop(
+  container: MedusaContainer,
+  seller_id: string
+) {
+  const result = await createShopWorkflow.run({
+    input: {
+      seller_id,
+      shop: {
+        name: 'test shop'
+      }
+    }
+  })
+  // @TODO внести линкование к селлеру внутрь воркфлоу
+  // сходу не удалось
+  const link = container.resolve(ContainerRegistrationKeys.LINK)
+
+  await link.create({
+    [SELLER_MODULE]: {
+      seller_id
+    },
+    [SHOP_MODULE]: {
+      shop_id: result.result.id
+    }
+  })
 }

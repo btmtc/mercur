@@ -4,6 +4,7 @@ import { StoreStatus } from "@mercurjs/framework";
 import { MemberInvite } from "./invite";
 import { Member } from "./member";
 import { SellerOnboarding } from "./onboarding";
+import { Shop } from "./shop";
 
 export const Seller = model.define("seller", {
   id: model.id({ prefix: "sel" }).primaryKey(),
@@ -23,4 +24,5 @@ export const Seller = model.define("seller", {
   members: model.hasMany(() => Member),
   invites: model.hasMany(() => MemberInvite),
   onboarding: model.hasOne(() => SellerOnboarding).nullable(),
+  shops: model.hasMany(() => Shop),
 });

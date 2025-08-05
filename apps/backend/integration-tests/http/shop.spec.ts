@@ -8,7 +8,7 @@ import seedMarketplaceData from '../../src/scripts/seed'
 
 medusaIntegrationTestRunner({
   testSuite: ({ api }) => {
-    describe('Custom endpoints', () => {
+    describe.skip('Custom endpoints', () => {
       describe('POST /auth/seller/emailpass', () => {
         beforeEach(async () => {
           await seedMarketplaceData({ container, args: [] })

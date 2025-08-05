@@ -1,5 +1,5 @@
-import { ExecArgs } from '@medusajs/framework/types'
-import { ContainerRegistrationKeys } from '@medusajs/framework/utils'
+import { ExecArgs } from '@medusajs/framework/types';
+import { ContainerRegistrationKeys } from '@medusajs/framework/utils';
 
 import {
   createConfigurationRules,
@@ -15,30 +15,31 @@ import {
   createSellerStockLocation,
   createSellers,
   createServiceZoneForFulfillmentSet,
+  createShop,
   createStore
-} from './seed/seed-functions'
+} from './seed/seed-functions';
 
 export default async function seedMarketplaceData({ container }: ExecArgs) {
-  const logger = container.resolve(ContainerRegistrationKeys.LOGGER)
+  const logger = container.resolve(ContainerRegistrationKeys.LOGGER);
 
-  logger.info('=== Configurations ===')
-  logger.info('Creating default sales channel...')
-  const salesChannel = await createSalesChannel(container)
-  logger.info('Creating default regions...')
-  const region = await createRegions(container)
-  logger.info('Creating publishable api key...')
-  const apiKey = await createPublishableKey(container, salesChannel.id)
-  logger.info('Creating store data...')
-  await createStore(container, salesChannel.id, region.id)
-  logger.info('Creating configuration rules...')
-  await createConfigurationRules(container)
+  logger.info('=== Configurations ===');
+  logger.info('Creating default sales channel...');
+  const salesChannel = await createSalesChannel(container);
+  logger.info('Creating default regions...');
+  const region = await createRegions(container);
+  logger.info('Creating publishable api key...');
+  const apiKey = await createPublishableKey(container, salesChannel.id);
+  logger.info('Creating store data...');
+  await createStore(container, salesChannel.id, region.id);
+  logger.info('Creating configuration rules...');
+  await createConfigurationRules(container);
 
-  logger.info('=== Example data ===')
-  logger.info('Creating product categories...')
-  await createProductCategories(container)
-  logger.info('Creating product collections...')
-  await createProductCollections(container)
-  logger.info('Creating seller...')
+  logger.info('=== Example data ===');
+  logger.info('Creating product categories...');
+  await createProductCategories(container);
+  logger.info('Creating product collections...');
+  await createProductCollections(container);
+  logger.info('Creating seller...');
   const sellers = await createSellers(container, [
     {
       email: 'seller@mercurjs.com',
@@ -50,37 +51,44 @@ export default async function seedMarketplaceData({ container }: ExecArgs) {
       password: '123',
       name: 'seller01'
     }
-  ])
-  logger.info('Creating seller stock location...')
+  ]);
+  logger.info('Creating shop for seller01@dummy.com...');
+
+  const dummySeller = sellers.find(
+    (seller) => seller.handle === 'seller01-store'
+  );
+
+  await createShop(container, dummySeller?.id as string);
+  logger.info('Creating seller stock location...');
   const stockLocation = await createSellerStockLocation(
     container,
     sellers[0].id,
     salesChannel.id
-  )
-  logger.info('Creating service zone...')
+  );
+  logger.info('Creating service zone...');
   const serviceZone = await createServiceZoneForFulfillmentSet(
     container,
     sellers[0].id,
     stockLocation.fulfillment_sets[0].id
-  )
-  logger.info('Creating seller shipping option...')
+  );
+  logger.info('Creating seller shipping option...');
   await createSellerShippingOption(
     container,
     sellers[0].id,
     sellers[0].name,
     region.id,
     serviceZone.id
-  )
-  logger.info('Creating seller products...')
-  await createSellerProducts(container, sellers[0].id, salesChannel.id)
-  logger.info('Creating inventory levels...')
-  await createInventoryItemStockLevels(container, stockLocation.id)
-  logger.info('Creating default commission...')
-  await createDefaultCommissionLevel(container)
+  );
+  logger.info('Creating seller products...');
+  await createSellerProducts(container, sellers[0].id, salesChannel.id);
+  logger.info('Creating inventory levels...');
+  await createInventoryItemStockLevels(container, stockLocation.id);
+  logger.info('Creating default commission...');
+  await createDefaultCommissionLevel(container);
 
-  logger.info('=== Finished ===')
-  logger.info(`Publishable api key: ${apiKey.token}`)
-  logger.info(`Vendor panel access:`)
-  logger.info(`email: seller@mercurjs.com`)
-  logger.info(`pass: secret`)
+  logger.info('=== Finished ===');
+  logger.info(`Publishable api key: ${apiKey.token}`);
+  logger.info(`Vendor panel access:`);
+  logger.info(`email: seller@mercurjs.com`);
+  logger.info(`pass: secret`);
 }
